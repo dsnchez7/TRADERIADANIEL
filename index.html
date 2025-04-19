@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análisis técnico con IA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: black;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ffcc80;
+      z-index: 10;
+    }
+    input, select, button {
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    input, select {
+      width: 250px;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #00ddb3;
+    }
+    #resultado {
+      margin-top: 30px;
+      z-index: 10;
+    }
+    #resultado img {
+      max-width: 80vw;
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fondo"></canvas>
+  <h1>Análisis técnico con IA</h1>
+  <form id="formulario">
+    <input type="text" id="symbol" placeholder="Ejemplo: ETHUSDT" required />
+    <select id="timeframe">
+      <option value="15">15 minutos</option>
+      <option value="60">1 Hora</option>
+      <option value="240">4 Horas</option>
+      <option value="D">1 Día</option>
+    </select>
+    <button type="submit">Generar gráfico</button>
+  </form>
+  <div id="resultado"></div>
+
+  <script>
+    const form = document.getElementById('formulario');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resultado.innerHTML = 'Generando...';
+      const symbol = document.getElementById('symbol').value;
+      const timeframe = document.getElementById('timeframe').value;
+
+      try {
+        const response = await fetch('/api/captura', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symbol, timeframe })
+        });
+
+        if (!response.ok) throw new Error('Error al generar gráfico');
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        resultado.innerHTML = `<img src="${url}" alt="Gráfico generado">`;
+      } catch (error) {
+        resultado.innerHTML = '<p style="color: red">Ocurrió un error al generar el gráfico</p>';
+      }
+    });
+
+    // Fondo animado de estrellas
+    const canvas = document.getElementById('fondo');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = Array.from({length: 100}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5,
+      d: Math.random() * 1
+    }));
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ffcc';
+      stars.forEach(s => {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+        s.y += s.d;
+        if (s.y > canvas.height) {
+          s.y = 0;
+          s.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+  </script>
+</body>
+</html>
