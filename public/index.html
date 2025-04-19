@@ -22,8 +22,6 @@
       justify-content: center;
       min-height: 100vh;
       padding: 2rem;
-      overflow: hidden;
-      position: relative;
     }
     .container {
       background-color: rgba(0, 0, 0, 0.5);
@@ -33,7 +31,6 @@
       max-width: 800px;
       width: 100%;
       text-align: center;
-      z-index: 2;
     }
     h1 {
       margin-bottom: 1rem;
@@ -75,7 +72,6 @@
     <button onclick="obtenerAnalisis()">Obtener análisis</button>
 
     <div id="resultado">
-      <img id="grafico" src="" alt="Captura del gráfico" style="max-width:100%; display:none; margin-top:20px;" />
       <div id="analisis"></div>
     </div>
   </div>
@@ -84,6 +80,7 @@
     async function obtenerAnalisis() {
       const symbol = document.getElementById('symbol').value;
       const timeframe = document.getElementById('timeframe').value;
+
       const response = await fetch('/api/captura', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,8 +89,6 @@
 
       if (response.ok) {
         const data = await response.json();
-        document.getElementById('grafico').src = data.imagen;
-        document.getElementById('grafico').style.display = 'block';
         document.getElementById('analisis').textContent = data.analisis;
       } else {
         alert('Error al obtener análisis.');
