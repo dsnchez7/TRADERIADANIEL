@@ -3,116 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Análisis Técnico con IA ✨</title>
+  <title>Daniel Calvio IA Trader</title>
   <style>
-    body {
+    * {
       margin: 0;
-      background: black;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0f0c29;
+      background-image: radial-gradient(#ffffff22 1px, transparent 1px);
+      background-size: 40px 40px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-    }
-
-    .stars {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(white 1px, transparent 1px),
-                  radial-gradient(white 1px, transparent 1px);
-      background-position: 0 0, 25px 25px;
-      background-size: 50px 50px;
-      animation: stars 20s linear infinite;
-    }
-
-    @keyframes stars {
-      from { background-position: 0 0, 25px 25px; }
-      to { background-position: -50px -50px, -25px -25px; }
-    }
-
-    .container {
-      position: relative;
-      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      max-width: 800px;
+      width: 100%;
       text-align: center;
+      z-index: 2;
     }
-
     h1 {
-      font-size: 2.5rem;
-      color: #00ffcc;
+      margin-bottom: 1rem;
+      font-size: 2rem;
     }
-
     input, select, button {
-      margin: 10px;
-      padding: 10px;
-      font-size: 1rem;
+      margin: 0.5rem;
+      padding: 0.5rem;
       border: none;
       border-radius: 5px;
     }
-
     button {
-      background-color: #00ffcc;
-      color: black;
+      background-color: #1e90ff;
+      color: white;
       cursor: pointer;
     }
-
-    img {
-      margin-top: 20px;
-      max-width: 90%;
-      border: 1px solid #00ffcc;
-      border-radius: 10px;
+    #resultado {
+      margin-top: 2rem;
     }
-
-    #error {
-      color: #ff4d4d;
-      margin-top: 10px;
+    #analisis {
+      white-space: pre-wrap;
+      text-align: left;
+      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 1rem;
+    }
+    .gato-egipcio {
+      width: 120px;
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      opacity: 0.8;
+      animation: flotar 4s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes flotar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
     }
   </style>
 </head>
 <body>
-  <div class="stars"></div>
   <div class="container">
-    <h1>Análisis Técnico con IA 🔮</h1>
-    <input type="text" id="symbol" placeholder="Ej: ETHUSDT" />
+    <h1>Análisis Daniel Calvio IA Trader</h1>
+    <input type="text" id="symbol" placeholder="Ejemplo: ETHUSDT" />
     <select id="timeframe">
-      <option value="60">1 Hora</option>
-      <option value="240">4 Horas</option>
-      <option value="D">Diario</option>
+      <option value="1h">1H</option>
+      <option value="4h">4H</option>
+      <option value="1d">1D</option>
     </select>
-    <button onclick="analizar()">Analizar</button>
-    <p id="error"></p>
-    <img id="resultado" style="display:none;" />
+    <button onclick="obtenerAnalisis()">Obtener análisis</button>
+
+    <div id="resultado">
+      <img id="grafico" src="" alt="Captura del gráfico" style="max-width:100%; display:none; margin-top:20px;" />
+      <div id="analisis"></div>
+    </div>
   </div>
 
+  <img class="gato-egipcio" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Bastet.svg/240px-Bastet.svg.png" alt="Gato egipcio" />
+
   <script>
-    async function analizar() {
-      const symbol = document.getElementById("symbol").value.trim();
-      const timeframe = document.getElementById("timeframe").value;
-      const error = document.getElementById("error");
-      const resultado = document.getElementById("resultado");
+    async function obtenerAnalisis() {
+      const symbol = document.getElementById('symbol').value;
+      const timeframe = document.getElementById('timeframe').value;
+      const response = await fetch('/api/captura', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol, timeframe })
+      });
 
-      error.textContent = '';
-      resultado.style.display = 'none';
-
-      try {
-        const res = await fetch('/api/captura', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ symbol, timeframe })
-        });
-
-        if (!res.ok) throw new Error('No se pudo generar el gráfico');
-
-        const blob = await res.blob();
-        resultado.src = URL.createObjectURL(blob);
-        resultado.style.display = 'block';
-      } catch (err) {
-        error.textContent = err.message;
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById('grafico').src = data.imagen;
+        document.getElementById('grafico').style.display = 'block';
+        document.getElementById('analisis').textContent = data.analisis;
+      } else {
+        alert('Error al obtener análisis.');
       }
     }
   </script>
 </body>
 </html>
+
