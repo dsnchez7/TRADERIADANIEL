@@ -1,13 +1,14 @@
+// ✅ Archivo 2: package.json (estructura Railway funcional)
 {
-  "name": "traderiadaniel",
+  "name": "traderiadaniel-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "puppeteer": "^21.3.8",
-    "cors": "^2.8.5"
+    "puppeteer": "^21.3.8"
   }
 }
