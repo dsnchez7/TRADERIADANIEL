@@ -38,7 +38,7 @@ app.post('/api/captura', async (req, res) => {
     const analisisTexto = analizarEntrada({ symbol, timeframe });
 
     res.json({
-      imagen: imagePath,
+
       analisis: analisisTexto
     });
 
