@@ -61,19 +61,6 @@
       padding: 1rem;
       border-radius: 1rem;
     }
-    .gato-egipcio {
-      width: 120px;
-      position: absolute;
-      bottom: 30px;
-      right: 30px;
-      opacity: 0.8;
-      animation: flotar 4s ease-in-out infinite;
-      z-index: 1;
-    }
-    @keyframes flotar {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
   </style>
 </head>
 <body>
@@ -92,8 +79,6 @@
       <div id="analisis"></div>
     </div>
   </div>
-
-  <img class="gato-egipcio" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Bastet.svg/240px-Bastet.svg.png" alt="Gato egipcio" />
 
   <script>
     async function obtenerAnalisis() {
@@ -117,4 +102,3 @@
   </script>
 </body>
 </html>
-
