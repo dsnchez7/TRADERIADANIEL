@@ -28,6 +28,9 @@ app.post('/api/captura', async (req, res) => {
     res.status(500).send('Error al capturar gráfico');
   }
 });
+app.get('/', (req, res) => {
+  res.send('Servidor activo. Usa POST en /api/captura para obtener el gráfico.');
+});
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en puerto ${port}`);
