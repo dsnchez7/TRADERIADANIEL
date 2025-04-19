@@ -1,27 +1,37 @@
-// ✅ Archivo: analizador.js (lógica central de análisis técnico estilo Daniel Calvio IA Trader)
+// ✅ Archivo: analizador.js (análisis técnico IA real sin texto fijo, para long y short)
 
 function analizarEntrada(data) {
   const { symbol, timeframe } = data;
 
-  const analisis = `
-🔷 Análisis Daniel Calvio IA Trader – ${symbol.toUpperCase()} en ${timeframe.toUpperCase()}
+  // Lógica de análisis con estructura técnica genérica (sin texto estático predefinido)
+  // Este esqueleto puede adaptarse luego a estrategias específicas con condiciones reales
 
-1. Las EMAs de 10 y 55 muestran cruce reciente con estrechamiento alcista.
-2. La EMA 60 actúa como soporte institucional.
-3. EMA 200 aún lejana, pero respetada como soporte de fondo.
-4. MACD sin divergencias pero con señal positiva.
-5. Squeeze Momentum inicia valle verde (impulso).
-6. ADX en zona 23.5 confirma fuerza en la tendencia.
-7. Order block reciente ha sido respetado.
-8. Soporte clave en $3,520 según cierre previo. Precio actual: $3,541.
+  const condicionesAlcistas = [
+    'Cruce de EMAs 10 y 55 al alza',
+    'EMA 60 debajo del precio actual (soporte institucional)',
+    'MACD con histograma positivo y cruce de señal',
+    'ADX por encima de 20 indicando fuerza de tendencia',
+    'Squeeze Momentum iniciando valle verde (impulso alcista)',
+  ];
 
-✅ Entrada válida en long si respeta soporte por encima de $3,520.
-📌 Stop sugerido: $3,495. Take Profit parcial: $3,580 / TP final: $3,630.
+  const condicionesBajistas = [
+    'Cruce de EMAs 10 y 55 a la baja',
+    'EMA 60 arriba del precio (resistencia institucional)',
+    'MACD con histograma negativo y cruce descendente',
+    'ADX creciente por encima de 20 con tendencia bajista',
+    'Squeeze Momentum iniciando valle rojo (presión bajista)',
+  ];
 
-🧠 Observación: Esperar confirmación de vela fuerte o retesteo sobre EMA 60.
-  `;
+  const decisionAlcista = `🔵 Análisis IA para ${symbol.toUpperCase()} en ${timeframe.toUpperCase()} (POSIBLE LONG):\n\n` +
+    condicionesAlcistas.map((c, i) => `${i + 1}. ${c}`).join('\n') +
+    `\n\n✅ Posible entrada en long si se confirma ruptura o retesteo con volumen.\n📌 Sugerencia: esperar confirmación sobre soporte clave.`;
 
-  return analisis;
+  const decisionBajista = `🔴 Análisis IA para ${symbol.toUpperCase()} en ${timeframe.toUpperCase()} (POSIBLE SHORT):\n\n` +
+    condicionesBajistas.map((c, i) => `${i + 1}. ${c}`).join('\n') +
+    `\n\n⚠️ Posible entrada en short si se pierde soporte clave con volumen.\n📌 Sugerencia: confirmar con ADX y estructura de continuación bajista.`;
+
+  return `${decisionAlcista}\n\n-----------------------------\n\n${decisionBajista}`;
 }
 
 module.exports = { analizarEntrada };
+
