@@ -1,10 +1,11 @@
-// ✅ Archivo: index.js (servidor principal con análisis IA y captura gráfica)
+// ✅ Archivo: index.js (servidor principal con análisis IA y captura gráfica + imagen servida correctamente)
 
 const { analizarEntrada } = require('./analizador');
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,7 +22,8 @@ app.post('/api/captura', async (req, res) => {
   }
 
   const url = `https://www.tradingview.com/chart/?symbol=${symbol.toUpperCase()}&interval=${timeframe}`;
-  const imagePath = path.join('/tmp', `${symbol}_${timeframe}.png`);
+  const imageName = `${symbol}_${timeframe}.png`;
+  const imagePath = path.join(__dirname, 'public', imageName);
 
   try {
     const browser = await puppeteer.launch({
@@ -36,9 +38,10 @@ app.post('/api/captura', async (req, res) => {
     await browser.close();
 
     const analisisTexto = analizarEntrada({ symbol, timeframe });
+    const imageUrl = `/${imageName}`;
 
     res.json({
-
+      imagen: imageUrl,
       analisis: analisisTexto
     });
 
@@ -55,5 +58,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor corriendo en puerto ${port}`);
 });
+
 
 
